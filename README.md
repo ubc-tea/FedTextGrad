@@ -53,9 +53,8 @@ source venv/bin/activate  # On Windows use: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### Installation & Model Selection Notes  
+### 🔧 Tips: Installation & Model Selection  
 - Use our local `package-textgrad` (no local install needed).  
-- If occasional format misalignment occurs, try a more advanced or larger LLM.  
 
 
 ## 🏗️ Usage
@@ -138,6 +137,10 @@ pip install flashinfer -i https://flashinfer.ai/whl/cu121/torch2.4/
 ```bash
 python -m sglang.launch_server --model-path meta-llama/Meta-Llama-3-8B-Instruct --port 30000
 ```
+
+##### 🔧 Tips: Model Selection  
+- If occasional format misalignment occurs, try a more advanced or larger LLM.  
+
 
 ### 3️⃣ Running Experiments
 
