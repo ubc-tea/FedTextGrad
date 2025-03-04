@@ -1,4 +1,4 @@
-# [Project Title]
+# FedTextGrad: Federated Textual Gradient
 
 [![Conference](https://img.shields.io/badge/ICLR-2025-blue.svg)](https://iclr.cc/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
