@@ -53,7 +53,7 @@ source venv/bin/activate  # On Windows use: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 🔧 Tips: Installation & Model Selection  
+### 🔧 Tips: Installation
 - Use our local `package-textgrad` (no local install needed).  
 
 
