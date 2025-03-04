@@ -1,0 +1,168 @@
+# [Project Title]
+
+[![Conference](https://img.shields.io/badge/ICLR-2025-blue.svg)](https://iclr.cc/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://www.python.org/)
+
+Official repository for our **ICLR 2025** paper:
+
+> **Can Textual Gradient Work in Federated Learning?**  
+> *[Minghui Chen](https://chenminghui.com), Ruinan Jin, Wenlong Deng, Yuanyuan Chen, Zhi Huang, Han Yu, Xiaoxiao Li*  
+> [[Arxiv](https://arxiv.org/abs/2502.19980)]  
+
+## 📌 Abstract
+
+Recent studies highlight the promise of LLM-based prompt optimization, especially with TextGrad, which automates differentiation via texts and backpropagates textual feedback. This approach facilitates training in various real-world applications that do not support numerical gradient propagation or loss calculation. In this paper, we systematically explore the potential and challenges of incorporating textual gradient into Federated Learning (FL). Our contributions are fourfold. Firstly, we introduce a novel FL paradigm, Federated Textual Gradient (FedTextGrad), that allows clients to upload locally optimized prompts derived from textual gradients, while the server aggregates the received prompts. Unlike traditional FL frameworks, which are designed for numerical aggregation, FedTextGrad is specifically tailored for handling textual data, expanding the applicability of FL to a broader range of problems that lack well-defined numerical loss functions. Secondly, building on this design, we conduct extensive experiments to explore the feasibility of FedTextGrad. Our findings highlight the importance of properly tuning key factors (e.g., local steps) in FL training. Thirdly, we highlight a major challenge in FedTextGrad aggregation: retaining essential information from distributed prompt updates. Last but not least, in response to this issue, we improve the vanilla variant of FedTextGrad by providing actionable guidance to the LLM when summarizing client prompts by leveraging the Uniform Information Density principle. Through this principled study, we enable the adoption of textual gradients in FL for optimizing LLMs, identify important issues, and pinpoint future directions, thereby opening up a new research area that warrants further investigation.
+
+## 📂 Project Structure
+
+```
+📁 repo/
+│-- 📜 README.md                    # Project documentation
+│-- 📜 .gitignore                   # Ignored files
+│-- 📜 requirements.txt             # Required packages
+│-- 📜 main.py                      # Main Python file
+│-- 📜 train_centralized.py         # Centralized training
+│-- 📜 train_homo_fed.py            # Homogeneous Federated Learning
+│-- 📜 train_hetero_fed.py          # Heterogeneous Federated Learning
+│-- 📂 scripts/                     # Scripts for running Python files
+│   │-- 📜 run_centralized.py       # Main script for centralized training
+│   │-- 📜 run_homo_fed.py          # Homogeneous FL script
+│   │-- 📜 run_hetero_fed.py        # Heterogeneous FL script
+│-- 📂 textgrad/                    # TextGrad package
+│-- 📂 utils/                       # Utility functions for training
+│-- 📂 logs/                        # Results and logs
+```
+
+## 🚀 Installation
+
+Clone the repository and install dependencies:
+
+```bash
+# Clone the repository
+git clone https://github.com/ubc-tea/FedTextGrad
+cd FedTextGrad
+
+# Create a virtual environment (optional)
+python -m venv venv
+source venv/bin/activate  # On Windows use: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+## 🏗️ Usage
+
+### 1️⃣ Data Preparation
+
+#### Downloading Datasets
+- BBH Word Counting (automatic downloading)
+- BBH Word Sorting (automatic downloading)
+- GSM8k (requires `pip install datasets` from Hugging Face)
+
+### 2️⃣ Setting Up LLM APIs
+
+#### Using OpenAI API
+- Specify `OPENAI_API_KEY`.
+
+#### Using Other APIs
+- Specify `BASE_URL` for third-party providers.
+
+#### Using Local LLM API: Ollama
+- Automatic installation of Ollama:
+
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+- If manually downloading:
+  - Get the release from [Ollama GitHub](https://github.com/ollama/ollama/releases).
+  - Start the Ollama server:
+
+```bash
+ollama serve
+```
+
+- Additional resources:
+  - [Improve Ollama speed](https://anakin.ai/blog/how-to-make-ollama-faster/)
+  - [Specify Ollama GPU](https://gist.github.com/pykeras/0b1e32b92b87cdce1f7195ea3409105c)
+
+#### Using Local LLM API: vLLM
+
+- Install `vllm`:
+
+```bash
+pip install vllm
+```
+
+- Download models:
+
+```bash
+python preprocessing/llm_api/vllm_model_download.py
+```
+
+- Start vLLM as an API server:
+
+```bash
+python preprocessing/llm_api/vllm_serve.py
+```
+
+- [vLLM tutorial](https://ploomber.io/blog/vllm-deploy/)
+
+#### Using Local LLM API: SGLang
+
+- Install `SGLang`:
+
+```bash
+pip install --upgrade pip
+pip install "sglang[all]"
+```
+
+- Install FlashInfer CUDA kernels:
+
+```bash
+pip install flashinfer -i https://flashinfer.ai/whl/cu121/torch2.4/
+```
+
+- Start SGLang Server:
+
+```bash
+python -m sglang.launch_server --model-path meta-llama/Meta-Llama-3-8B-Instruct --port 30000
+```
+
+### 3️⃣ Running Experiments
+
+- Start local LLM server:
+
+```bash
+sh <LLM_API_tool>_serve.sh
+```
+
+- Run the corresponding module:
+
+```bash
+sh scripts/run_<module_name>.sh
+```
+
+**Examples:**
+
+Using Ollama API:
+```bash
+OLLAMA_BASE_URL='http://localhost:11434/v1' OPENAI_API_KEY='xxxxxxxxxxxxxxxx' python main.py --evaluation_engine ollama-llama3.1 --test_engine ollama-llama3.1 --task BBH_object_counting --module train_centralized
+```
+
+## 📊 Results
+
+Results can be found in the `logs` directory. Additionally, you can configure [comet_ml](https://www.comet.com/site/) for logging.
+
+## 📜 Citation
+
+If you find our work useful and relevant, please cite:
+
+```bibtex
+@inproceedings{chencan,
+  title={Can Textual Gradient Work in Federated Learning?},
+  author={Chen, Minghui and Jin, Ruinan and Deng, Wenlong and Chen, Yuanyuan and Huang, Zhi and Yu, Han and Li, Xiaoxiao},
+  booktitle={The Thirteenth International Conference on Learning Representations}
+}
+```
