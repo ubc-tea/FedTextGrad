@@ -54,7 +54,7 @@ pip install -r requirements.txt
 ```
 
 ### 🔧 Tips: Installation
-- Use our local `package-textgrad` (no local install needed).  
+- Use our local package textgrad (no local install needed).  
 
 
 ## 🏗️ Usage

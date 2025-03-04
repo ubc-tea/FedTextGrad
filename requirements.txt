@@ -10,3 +10,7 @@ gdown>=5.2.0
 litellm>=1.49.5
 pillow
 httpx
+numpy>=1.21.0
+tqdm>=4.62.3
+torch>=1.10.0
+comet_ml>=3.0.0
