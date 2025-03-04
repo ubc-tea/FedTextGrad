@@ -53,6 +53,11 @@ source venv/bin/activate  # On Windows use: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+### Installation & Model Selection Notes  
+- Use our local `package-textgrad` (no local install needed).  
+- If occasional format misalignment occurs, try a more advanced or larger LLM.  
+
+
 ## 🏗️ Usage
 
 ### 1️⃣ Data Preparation
@@ -77,17 +82,20 @@ pip install -r requirements.txt
 curl -fsSL https://ollama.com/install.sh | sh
 ```
 
-- If manually downloading:
-  - Get the release from [Ollama GitHub](https://github.com/ollama/ollama/releases).
-  - Start the Ollama server:
-
+If download with ollama pre-built binaries from the [Ollama GitHub release](https://github.com/ollama/ollama/releases).
+Start the Ollama Serving in the backend
 ```bash
-ollama serve
+tar -xzvf ollamaxxx.tgz &
+chmod +x ./bin/ollama &
+cd ./bin/ollama &
+./ollama serve
 ```
 
-- Additional resources:
-  - [Improve Ollama speed](https://anakin.ai/blog/how-to-make-ollama-faster/)
-  - [Specify Ollama GPU](https://gist.github.com/pykeras/0b1e32b92b87cdce1f7195ea3409105c)
+##### 🔧 Tips
+
+- **[Improve Ollama Speed](https://anakin.ai/blog/how-to-make-ollama-faster/)** – Techniques to optimize Ollama’s performance.
+- **[Specify Ollama GPU](https://gist.github.com/pykeras/0b1e32b92b87cdce1f7195ea3409105c)** – Guide on selecting a specific GPU for Ollama.
+- **[Set Ollama Serve URL](https://github.com/langchain-ai/langchain/issues/15365)** – Configure a custom serve URL for Ollama.
 
 #### Using Local LLM API: vLLM
 
@@ -97,19 +105,18 @@ ollama serve
 pip install vllm
 ```
 
-- Download models:
-
-```bash
-python preprocessing/llm_api/vllm_model_download.py
-```
-
 - Start vLLM as an API server:
 
 ```bash
-python preprocessing/llm_api/vllm_serve.py
+sh scripts/vllm_serve.py
 ```
 
-- [vLLM tutorial](https://ploomber.io/blog/vllm-deploy/)
+##### 🔧 Tips
+- **[vLLM Tutorial](https://ploomber.io/blog/vllm-deploy/)** – Guide to deploying vLLM.  
+- **Use Compute Capability 8.0+** (e.g., **A100**) for better performance.  
+- ️**Serving on Tesla V100-SXM2** – Use `--dtype=half --gpu-memory-utilization=0.9 --max-model-len=101728`.  
+- **Offline Mode** – Download models manually, set `TRANSFORMERS_OFFLINE=1` (or `HF_HUB_OFFLINE=1`).  
+- **Serving with vLLM** – Use the **Instruct version** of the LLM.  
 
 #### Using Local LLM API: SGLang
 
