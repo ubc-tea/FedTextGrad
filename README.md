@@ -26,9 +26,11 @@ Recent studies highlight the promise of LLM-based prompt optimization, especiall
 │-- 📜 train_homo_fed.py            # Homogeneous Federated Learning
 │-- 📜 train_hetero_fed.py          # Heterogeneous Federated Learning
 │-- 📂 scripts/                     # Scripts for running Python files
-│   │-- 📜 run_centralized.py       # Main script for centralized training
-│   │-- 📜 run_homo_fed.py          # Homogeneous FL script
-│   │-- 📜 run_hetero_fed.py        # Heterogeneous FL script
+│   │-- 📜 run_centralized.sh       # Main script for centralized training
+│   │-- 📜 run_homo_fed.sh          # Homogeneous FL script
+│   │-- 📜 run_hetero_fed.sh        # Heterogeneous FL script
+│   │-- 📜 vllm_serve.sh            # VLLM serve
+│   │-- 📜 sglang_serve.sh          # SG serve
 │-- 📂 textgrad/                    # TextGrad package
 │-- 📂 utils/                       # Utility functions for training
 │-- 📂 logs/                        # Results and logs
