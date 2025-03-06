@@ -1,7 +1,7 @@
 # FedTextGrad: Federated Textual Gradient
 
 [![Conference](https://img.shields.io/badge/ICLR-2025-blue.svg)](https://iclr.cc/)
-[![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Python-3.8%2B-green.svg)](https://www.python.org/)
 [![Arxiv](https://img.shields.io/badge/ArXiv-2502.19980-b31b1b.svg)](https://arxiv.org/abs/2502.19980)
 
 📌 **Official repository for our ICLR 2025 paper:**
