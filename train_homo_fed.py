@@ -84,18 +84,80 @@ def run_training(args, experiment):
             print(f"\nTraining Client {client_idx}")
             system_prompt = system_prompt_list[client_idx]
             total_step = 0
-            
+
             for batch_x, batch_y in tqdm(train_loaders[client_idx], desc=f"Client {client_idx} - Epoch {epoch}"):
                 optimizer_list[client_idx].zero_grad()
-                
-                losses = [eval_fn(inputs={"prediction": model_list[client_idx](tg.Variable(x, requires_grad=False, role_description='query or answer variable')), "ground_truth_answer": tg.Variable(int(y), requires_grad=False, role_description='query or answer variable')}) for x, y in zip(batch_x, batch_y)]
+
+                # Compute initial loss_value and collect losses
+                loss_value = 0
+                losses = []
+                for x, y in zip(batch_x, batch_y):
+                    x_var = tg.Variable(x, requires_grad=False, role_description='query or answer variable')
+                    y_val = int(y) if isinstance(y, np.integer) else int(y)
+                    y_var = tg.Variable(y_val, requires_grad=False, role_description='query or answer variable')
+                    response = model_list[client_idx](x_var)
+                    try:
+                        eval_output_variable = eval_fn(inputs={"prediction": response, "ground_truth_answer": y_var})
+                    except Exception:
+                        eval_output_variable = eval_fn([x_var, y_var, response])
+                    losses.append(eval_output_variable)
+                    match = re.search(r'<ACCURACY>\s*(\d+)\s*</ACCURACY>', eval_output_variable.get_value())
+                    if match:
+                        loss_value += int(match.group(1))
+                    else:
+                        loss_value += int(eval_output_variable.get_value())
+                loss_value /= len(batch_x)
+                print(f"\nBatch Train Loss Value: {loss_value}")
+
+                # Save the current prompt before the update
+                last_batch_prompt = system_prompt.get_value()
+
+                # Perform the backward pass and update the prompt
                 total_loss = tg.sum(losses)
                 total_loss.backward()
                 optimizer_list[client_idx].step()
-                
-                experiment.log_metric(f"client_{client_idx}_train_loss", np.mean([float(l.get_value()) for l in losses]), step=total_step)
+
+                # Re-run the same batch to calculate the updated loss value
+                updated_loss_value = 0
+                for x, y in zip(batch_x, batch_y):
+                    x_var = tg.Variable(x, requires_grad=False, role_description="query to the language model")
+                    y_val = int(y) if isinstance(y, np.integer) else int(y)
+                    y_var = tg.Variable(y_val, requires_grad=False, role_description="correct answer for the query")
+                    response = model_list[client_idx](x_var)
+                    try:
+                        eval_output_variable = eval_fn(inputs=dict(prediction=response, ground_truth_answer=y_var))
+                    except Exception:
+                        eval_output_variable = eval_fn([x_var, y_var, response])
+                    match = re.search(r'<ACCURACY>\s*(\d+)\s*</ACCURACY>', eval_output_variable.get_value())
+                    if match:
+                        updated_loss_value += int(match.group(1))
+                    else:
+                        updated_loss_value += int(eval_output_variable.get_value())
+                updated_loss_value /= len(batch_x)
+                print(f"Updated Batch Train Loss Value: {updated_loss_value}")
+
+                update_num += 1
+                # Decide whether to keep the updated prompt or revert based on the updated loss
+                if args.proximal_update:
+                    if updated_loss_value <= loss_value and updated_loss_value != 1.0:
+                        print("Improving Failure! Drop updated prompt in this step.")
+                        system_prompt.set_value(last_batch_prompt)
+                    else:
+                        print("Improving Success!")
+                        success_update += 1
+                else:
+                    if updated_loss_value < loss_value:
+                        print("Improving Failure! Drop updated prompt in this step.")
+                        system_prompt.set_value(last_batch_prompt)
+                    else:
+                        print("Improving Success!")
+                        success_update += 1
+
+                experiment.log_metric(f"client_{client_idx}_train_acc", loss_value, step=total_step)
+                experiment.log_metric(f"client_{client_idx}_updated_train_acc", updated_loss_value, step=total_step)
+                system_prompt_list[client_idx].set_value(system_prompt.get_value())
+
                 total_step += 1
-                
                 if total_step > args.max_steps:
                     break
     
