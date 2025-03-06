@@ -165,8 +165,12 @@ sh scripts/run_<module_name>.sh
 
 Using Ollama API:
 ```bash
-OLLAMA_BASE_URL='http://localhost:11434/v1' OPENAI_API_KEY='xxxxxxxxxxxxxxxx' python main.py --evaluation_engine ollama-llama3.1 --test_engine ollama-llama3.1 --task BBH_object_counting --module train_centralized
+OLLAMA_BASE_URL='http://localhost:11434/v1' OLLAMA_API_KEY='xxxxxxxxxxxxxxxx' python main.py --evaluation_engine ollama-llama3.1 --test_engine ollama-llama3.1 --task BBH_object_counting --module train_centralized
 ```
+
+##### 🔧 Tips: API URL & Key  
+- When integrating third-party LLM API services like OpenRouter or Togther AI, please configure the URL and key as specified in the Ollama documentation, and ensure that the model name is prefixed with “ollama-”. 
+
 
 ## 📊 Results
 
