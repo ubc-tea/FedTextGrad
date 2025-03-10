@@ -7,7 +7,7 @@
 📌 **Official repository for our ICLR 2025 paper:**
   
 > **Can Textual Gradient Work in Federated Learning?**  
-> *[Minghui Chen](https://chenminghui.com), Ruinan Jin, Wenlong Deng, Yuanyuan Chen, Zhi Huang, Han Yu, Xiaoxiao Li*  
+> *[Minghui Chen](https://chenminghui.com), [Ruinan Jin](https://nanboy-ronan.github.io/Personal-Web/), [Wenlong Deng](https://vengdeng.github.io/), Yuanyuan Chen, [Zhi Huang](https://www.zhihuang.ai/), [Han Yu](https://trustful.federated-learning.org/), [Xiaoxiao Li](https://tea.ece.ubc.ca/)*  
 > 📄 [[Arxiv](https://arxiv.org/abs/2502.19980)]  
 
 ![FedTextGradFramework](/resources/FedTextGrad_Framework.png)
